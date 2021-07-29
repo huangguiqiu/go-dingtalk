@@ -1,6 +1,6 @@
 # DingTalk Golang SDK
 
-DingTalk Golang SDK https://github.com/icepy
+DingTalk Golang SDK https://github.com/huangguiqiu
 
 # Feature Overview
 
@@ -28,7 +28,7 @@ DingTalk Golang SDK https://github.com/icepy
 # Install
 
 ```bash
-~ ᐅ go get -u github.com/icepy/go-dingtalk
+~ ᐅ go get -u github.com/huangguiqiu/go-dingtalk
 ~ ᐅ go-dingtalk
 Current SDK VERSION=0.1
 Current SDK OAPIURL=https://oapi.dingtalk.com/
@@ -53,7 +53,7 @@ package main
 
 import (
   "os"
-  "github.com/icepy/go-dingtalk/src"
+  "github.com/huangguiqiu/go-dingtalk/src"
 )
 
 func main() {

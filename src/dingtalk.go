@@ -9,8 +9,8 @@ import (
 /*
 *	date: 2018/05/20
 *	version: 0.1
-*	author: xiangwenwen(icepy)
-*	description: DingTalk Golang SDK https://github.com/icepy
+*	author: xiangwenwen(huangguiqiu)
+*	description: DingTalk Golang SDK https://github.com/huangguiqiu
 *
 *	^_^ 想了很久，还是准备用中文写一些话，以后的日子打算做一个山野隐居的佛系程序员
 *

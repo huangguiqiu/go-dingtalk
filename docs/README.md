@@ -9,14 +9,14 @@ features:
   details: 化繁为简，将复杂的细节问题隐藏，给予你的是简单的输入输出式api
 - title: 稳定
   details: 编写了完备的测试用例，保障SDK的稳定性
-footer: MIT Licensed | Copyright © 2018-present icepy
+footer: MIT Licensed | Copyright © 2018-present huangguiqiu
 ---
 
 ### 起步就像数 1, 2, 3 一样容易
 
 ``` bash
 # 安装
-$ go get -u github.com/icepy/go-dingtalk
+$ go get -u github.com/huangguiqiu/go-dingtalk
 ```
 
 ``` go
@@ -24,7 +24,7 @@ package main
 
 import (
 	"os"
-	"github.com/icepy/go-dingtalk/src"
+	"github.com/huangguiqiu/go-dingtalk/src"
 )
 
 func main() {
