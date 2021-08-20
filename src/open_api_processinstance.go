@@ -43,7 +43,7 @@ type ProcessInstanceTopVo struct {
 	BusinessID string `json:"business_id"`
 	OriginatorDeptName string `json:"originator_dept_name"`
 	MainProcessInstanceID string `json:"main_process_instance_id"`
-	ORMComponentValues []FormComponentValueVo `json:"orm_component_values"`
+	FormComponentValues []FormComponentValueVo `json:"form_component_values"`
 }
 
 // FormComponentValueVo 表单详情
@@ -92,6 +92,22 @@ type ProcessInstanceCommentAddResp struct {
 	Result bool `json:"result"`
 }
 
+// *************************下载审批附件***********************************
+
+// ProcessInstanceFileURLGetResp 下载审批附件 响应
+type ProcessInstanceFileURLGetResp struct {
+	OpenAPIResponse
+	Success bool `json:"success"`
+	Result AppSpaceResponse `json:"result"`
+}
+
+// AppSpaceResponse 文件内容
+type AppSpaceResponse struct {
+	FileID string `json:"file_id"`
+	SpaceID string `json:"space_id"`
+	DownloadURL string `json:"download_url"`
+}
+
 // ProcessInstanceGet 获取审批实例详情
 func (dtc *DingTalkClient) ProcessInstanceGet(processInstanceID string) (ProcessInstanceGetResp, error) {
 	var data ProcessInstanceGetResp
@@ -104,5 +120,18 @@ func (dtc *DingTalkClient) ProcessInstanceGet(processInstanceID string) (Process
 func (dtc *DingTalkClient) ProcessInstanceCommentAdd(info *ProcessInstanceCommentAddReq) (ProcessInstanceCommentAddResp, error) {
 	var data ProcessInstanceCommentAddResp
 	err := dtc.httpRPC("/topapi/process/instance/comment/add", nil, info, &data)
+	return data, err
+}
+
+// ProcessInstanceFileURLGet 下载审批附件
+func (dtc *DingTalkClient) ProcessInstanceFileURLGet(processInstanceID, fileID string) (ProcessInstanceFileURLGetResp, error) {
+	var data ProcessInstanceFileURLGetResp
+	reqData := map[string]map[string]string{
+		"request": {
+			"process_instance_id": processInstanceID,
+			"file_id": fileID,
+		},
+	}
+	err := dtc.httpRPC("/topapi/processinstance/file/url/get", nil, reqData, &data)
 	return data, err
 }
