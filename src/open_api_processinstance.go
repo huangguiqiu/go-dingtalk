@@ -105,7 +105,7 @@ type ProcessInstanceFileURLGetResp struct {
 type AppSpaceResponse struct {
 	FileID string `json:"file_id"`
 	SpaceID string `json:"space_id"`
-	DownloadURL string `json:"download_url"`
+	DownloadURI string `json:"download_uri"`
 }
 
 // ProcessInstanceGet 获取审批实例详情
