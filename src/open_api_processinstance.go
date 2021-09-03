@@ -1,5 +1,11 @@
 package dingtalk
 
+import (
+	"fmt"
+	"strings"
+	"time"
+)
+
 const (
 	// ProcessInstanceStatusNew 审批状态 新创建
 	ProcessInstanceStatusNew = "New"
@@ -14,10 +20,34 @@ const (
 )
 
 const (
+	// TaskResultAgree 同意
+	TaskResultAgree = "AGREE"
+	// TaskResultRefuse 拒绝
+	TaskResultRefuse = "REFUSE"
+	// TaskResultRedirected 转交
+	TaskResultRedirected = "REDIRECTED"
+)
+
+const (
 	// ProcessInstanceResultAgree 审批结果 同意
 	ProcessInstanceResultAgree = "agree"
 	// ProcessInstanceResultRefuse 审批状态 拒绝
 	ProcessInstanceResultRefuse = "refuse"
+)
+
+const (
+	// TaskStatusNew 未启动
+	TaskStatusNew = "NEW"
+	// TaskStatusRunning 处理中
+	TaskStatusRunning = "RUNNING"
+	// TaskStatusPaused 暂停
+	TaskStatusPaused = "PAUSED"
+	// TaskStatusCanceled 取消
+	TaskStatusCanceled = "CANCELED"
+	// TaskStatusCompleted 完成
+	TaskStatusCompleted = "COMPLETED"
+	// TaskStatusTerminated 终止
+	TaskStatusTerminated = "TERMINATED"
 )
 
 // *************************获取审批实例详情***********************************
@@ -44,6 +74,18 @@ type ProcessInstanceTopVo struct {
 	OriginatorDeptName string `json:"originator_dept_name"`
 	MainProcessInstanceID string `json:"main_process_instance_id"`
 	FormComponentValues []FormComponentValueVo `json:"form_component_values"`
+	Tasks []TaskTopVo `json:"tasks"`
+}
+
+// TaskTopVo 任务
+type TaskTopVo struct {
+	UserID string `json:"userid"`
+	TaskStatus string `json:"task_status"`
+	TaskResult string `json:"task_result"`
+	CreateTime string `json:"create_time"`
+	FinishTime string `json:"finish_time"`
+	TaskID string `json:"taskid"`
+	URL string `json:"url"`
 }
 
 // FormComponentValueVo 表单详情
@@ -108,6 +150,21 @@ type AppSpaceResponse struct {
 	DownloadURI string `json:"download_uri"`
 }
 
+// *************************获取审批实例ID列表***********************************
+
+// ProcessInstanceListIdsResp 获取审批实例id列表响应
+type ProcessInstanceListIdsResp struct {
+	OpenAPIResponse
+	Result ProcessInstanceListIdsPageResult `json:"result"`
+}
+
+// ProcessInstanceListIdsPageResult 分页数据
+type ProcessInstanceListIdsPageResult struct {
+	List []string `json:"list"`
+	NextCursor int `json:"next_cursor"`
+}
+
+
 // ProcessInstanceGet 获取审批实例详情
 func (dtc *DingTalkClient) ProcessInstanceGet(processInstanceID string) (ProcessInstanceGetResp, error) {
 	var data ProcessInstanceGetResp
@@ -133,5 +190,31 @@ func (dtc *DingTalkClient) ProcessInstanceFileURLGet(processInstanceID, fileID s
 		},
 	}
 	err := dtc.httpRPC("/topapi/processinstance/file/url/get", nil, reqData, &data)
+	return data, err
+}
+
+// ProcessInstanceListIds 获取审批实例id
+func (dtc *DingTalkClient) ProcessInstanceListIds(processCode string, startTime, endTime *time.Time, size, cursor int, userIds ...string) (ProcessInstanceListIdsResp, error) {
+	var data ProcessInstanceListIdsResp
+	if processCode == "" || startTime == nil {
+		return data, fmt.Errorf("no required params")
+	}
+	reqData := map[string]interface{}{
+		"process_code": processCode,
+		"start_time": startTime.Unix()*1000,
+	}
+	if endTime != nil {
+		reqData["end_time"] = endTime.Unix()*1000
+	}
+	if size != 0 {
+		reqData["size"] = size
+	}
+	if cursor != 0 {
+		reqData["cursor"] = cursor
+	}
+	if len(userIds) > 0 {
+		reqData["userid_list"] = strings.Join(userIds, ",")
+	}
+	err := dtc.httpRPC("/topapi/processinstance/listids", nil, reqData, &data)
 	return data, err
 }
